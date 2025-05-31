@@ -6,9 +6,29 @@
     <title>Finding Founders - Business Plan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        .app-interface-img {
+            transform: perspective(800px) rotateY(0) rotateX(0);
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            max-width: 100%;
+            height: auto;
+            will-change: transform;
+        }
+        
+        .app-interface-img.tilted {
+            transform: perspective(800px) rotateY(-12deg) rotateX(2deg);
+        }
+        
+        @media (max-width: 767px) {
+            .app-interface-img {
+                transform: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
         /* New Professional Color Scheme */
         :root {
             --primary: #2c3e50;
@@ -20,6 +40,8 @@
             --gray-dark: #95a5a6;
             --vip: #8e44ad;
             --vip-light: #9b59b6;
+            --header-gradient-start: #2C4156;
+            --header-gradient-end: #3495D7;
         }
         
         * {
@@ -39,27 +61,12 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--light);
-            padding: 100px 0 50px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+            padding: 0 clamp(20px, 5%, 40px);
             width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="100" height="100"/><path fill="rgba(255,255,255,0.1)" d="M30,10L50,30L70,10L90,30L70,50L90,70L70,90L50,70L30,90L10,70L30,50L10,30L30,10Z"/></svg>');
-            opacity: 0.1;
+            box-sizing: border-box;
         }
+        
+        /* Header styles moved to external styles.css */
         
         h1, h2, h3, h4, h5 {
             font-family: 'Poppins', sans-serif;
@@ -74,19 +81,8 @@
         
         h2 {
             font-size: 2.5rem;
-            margin: 60px 0 30px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(to right, var(--secondary), var(--accent));
+            margin: 20px 0 15px;
+            text-align: center;
         }
         
         h3 {
@@ -130,7 +126,7 @@
         }
         
         .section {
-            padding: 80px 0;
+            padding: 120px 0; /* Increased from 80px to 120px for more space */
         }
         
         .section:nth-child(even) {
@@ -392,10 +388,28 @@
             }
         }
         
-        .team-member {
-            text-align: center;
+        /* Rotating Taglines Animation - Only one line visible at a time, single 30s cycle */
+        .rotate-taglines {
+          position: relative;
+          height: 40px;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+          width: 100%;
         }
-        
+
+        .rotate-taglines span {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          opacity: 0;
+          visibility: hidden;
+          animation: rotateTaglines 30s linear infinite;
+          text-align: center;
+          transition: opacity 0.5s ease-in-out;
+        }
+
+        .rotate-taglines span:nth-child(1) { animation-delay: 0s; }
         .team-photo {
             width: 150px;
             height: 150px;
@@ -583,7 +597,7 @@
         
         /* VIP Feature Section */
         .vip-feature {
-            background: linear-gradient(135deg, var(--light), var(--gray));
+            background: #ffffff;
             position: relative;
             padding: 100px 0;
             margin: 60px 0;
@@ -610,7 +624,6 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 40px;
-            margin-top: 40px;
         }
         
         .vip-image {
@@ -646,7 +659,7 @@
             margin-bottom: 20px;
         }
         
-        .benefit-icon {
+        .benefit-item__icon {
             background: var(--vip);
             color: white;
             width: 50px;
@@ -657,22 +670,28 @@
             justify-content: center;
             margin-right: 20px;
             flex-shrink: 0;
-            margin-top: 12px; /* Increased top margin to lower the icon */
+            margin-top: 5px; /* Adjusted top margin to align with text */
         }
         
-        .benefit-icon i {
+        .benefit-item__icon i {
             font-size: 1.5rem;
-            line-height: 1; /* Ensure icon is centered */
+            line-height: 1;
         }
         
-        .benefit-text h4 {
+        .benefit-item__content {
+            flex: 1;
+        }
+        
+        .benefit-item__title {
             margin: 0 0 5px;
             color: var(--dark);
+            font-size: 1.1rem;
         }
         
-        .benefit-text p {
+        .benefit-item__text {
             margin: 0;
             color: var(--gray-dark);
+            line-height: 1.5;
         }
         
         .btn-vip {
@@ -697,32 +716,46 @@
         .plans-grid {
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
         .standard-plans {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            justify-content: center;
             gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
         }
         
         .plan-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 35%;
+            margin: 0;
+            transform: scale(1);
+            position: relative;
+            z-index: 1;
         }
         
         .plan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+            z-index: 2;
         }
         
         .plan-header {
             background: var(--primary);
             color: white;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
         }
         
@@ -746,36 +779,83 @@
         }
         
         .plan-body {
-            padding: 30px;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+            background: white;
+            border-radius: 0 0 8px 8px;
         }
         
         /* VIP Plan Styling */
         .vip-plan-container {
-            margin-top: 20px;
+            width: 100%;
+            margin: 40px 0 60px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .vip-plan-container {
+                margin: 40px 0 80px;
+            }
         }
         
         .vip-card {
             position: relative;
+            width: 80%;
             max-width: 800px;
             margin: 0 auto;
             border: 2px solid var(--vip);
-            transform: scale(1.05);
+            overflow: hidden;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .vip-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .contributor-vip {
+            margin-top: 60px !important;
+        }
+        
+        .startup-vip {
+            margin-top: 30px !important;
         }
         
         .vip-ribbon {
             position: absolute;
             top: 20px;
-            right: -30px;
+            right: -40px;
             background: var(--vip);
             color: white;
-            padding: 5px 30px;
+            padding: 5px 40px;
             transform: rotate(45deg);
             font-weight: 600;
             z-index: 1;
         }
         
-        .vip-header {
-            background: var(--vip);
+        .popular-plan {
+            position: relative;
+            /* Keep overflow hidden to maintain border radius */
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .popular-tag {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .vip-content {
@@ -789,6 +869,16 @@
             flex: 2;
         }
         
+        .vip-body {
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 60px;
+            overflow: visible;
+        }
+        
         .vip-image-small {
             flex: 1;
             text-align: center;
@@ -796,8 +886,11 @@
         
         .vip-image-small img {
             max-width: 100%;
+            height: auto;
             border-radius: 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto;
         }
         
         .highlight-feature {
@@ -858,242 +951,1377 @@
                 transform: scale(1);
             }
         }
+        
+        /* Investor Read More Button - Refactored with .expanded class */
+        #investor-read-more-button {
+            background-color: #FFA500;
+            color: #fff; /* Text color for "Read More" */
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex; /* For icon and text alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Increased gap slightly */
+            flex-direction: row;
+            width: auto; /* Default width */
+            text-align: center;
+            /* Simplified transition as it no longer changes width/padding drastically */
+            transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Arrow for 'Read More' state (button NOT expanded) */
+        #investor-read-more-button #investor-down-arrow {
+            display: inline-block;
+            font-size: 1em;
+            color: #fff; /* White arrow with orange button */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* New Contact Us Link (styled as a button) */
+        #investor-contact-us-link {
+            /* display: none; is set inline initially, JS changes to 'block' */
+            background-color: transparent;
+            color: #000; 
+            border: 2px solid #ccc; 
+            border-radius: 5px; /* Match other button radius */
+            padding: 10px 20px; /* Consistent padding */
+            cursor: pointer; 
+            width: 100%; 
+            display: block; /* Will be set to block by JS, but good to define here */
+            text-decoration: none; 
+            box-sizing: border-box;
+            margin-top: 20px; 
+            margin-bottom: 20px;
+        }
+
+        /* Style for the email address text to look like a link */
+        /* Style for the email address text inside the new contact link */
+        #investor-contact-us-link .email-link-style {
+            text-decoration: underline;
+            color: #007bff; /* Standard link blue, or use a CSS variable if defined */
+            /* cursor: pointer; is inherited from parent <a> */
+        }
+
+        .referral-rewards {
+          margin: 6rem 0; /* Add margin to top and bottom */
+          padding: 5rem 2rem; /* Increased padding */
+          background-color: #6a0dad; /* Purple background */
+          color: white; /* White text */
+          border-radius: 0; /* Remove curved corners */
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .referral-rewards h2 {
+          font-size: 2.5rem; /* Larger font size */
+          margin-bottom: 1rem;
+          color: white; /* Ensure text is white */
+        }
+
+        .referral-rewards ul {
+          list-style: none;
+          padding-left: 0;
+          margin: 1rem 0;
+        }
+
+        .referral-rewards li {
+          margin: 0.75rem 0;
+          font-weight: 500;
+          color: white; /* White text */
+          font-size: 1.1rem; /* Slightly larger text */
+        }
+
+        .referral-rewards p {
+          margin: 1rem 0;
+          color: white; /* White text */
+          font-size: 1.2rem; /* Slightly larger text */
+        }
+
+        .price-label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          /* font-size: 1.25rem; */
+          /* font-weight: 600; */
+          margin-bottom: 0.25rem;
+        }
+
+        .original-price {
+          text-decoration: line-through;
+          text-decoration-color: #f97316; /* orange tone for the line */
+          /* color property removed to inherit from parent */
+          font-size: 2.5rem;
+          font-weight: 700;
+        }
+
+        .current-free {
+          color: #16a34a; /* green tone */
+          font-weight: 700;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .see-below-note {
+          font-size: 0.75rem;
+          color: #666;
+          margin-top: 10px; /* Increased from -4px to add space below the circle */
+          display: block;
+        }
+
+        .price-month-unit {
+          font-size: 1rem;
+          font-weight: 400;
+          text-decoration: none; /* Remove line-through */
+        }
+
+        .scribble-circle {
+          display: inline-block;
+          padding: 4px 10px;
+          border: 2px solid #f97316; /* Orange border */
+          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Slightly irregular circle */
+          box-shadow: 0 0 0 2px #fff, /* White inner border for better visibility */
+                      0 0 0 4px #f97316; /* Orange outer border */
+          position: relative;
+          z-index: 1;
+          background-color: #fff; /* Ensure the background is white */
+          color: #16a34a; /* Maintain the green text color */
+          font-weight: 700; /* Keep the bold text */
+          line-height: 1.2; /* Adjust line height for better spacing */
+          transform: rotate(-2deg); /* Slight rotation for a hand-drawn feel */
+        }
+
+        /* Free Access Banner CSS */
+        .freeaccess {
+          background-color: #6b21a8; /* vibrant purple */
+          color: white;
+          padding: 3rem 1.5rem;
+          text-align: center;
+        }
+
+        .freeaccess__content h2 {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        .freeaccess__tag {
+          background: #f59e0b;
+          color: #fff;
+          font-size: 0.75rem;
+          font-weight: bold;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          text-transform: uppercase;
+          display: inline-block;
+          margin-bottom: 0.75rem;
+        }
+
+        .freeaccess__content ul {
+          list-style: none;
+          padding: 0;
+          margin: 1rem 0;
+        }
+
+        .freeaccess__content li {
+          margin: 0.5rem 0;
+          font-size: 1.1rem;
+          font-weight: 500;
+        }
+
+        .freeaccess__note {
+          font-size: 0.875rem;
+          color: #e0e0e0;
+          margin-top: 1rem;
+        }
+
+        .freeaccess__button {
+          display: inline-block;
+          margin-top: 1.5rem;
+          padding: 0.75rem 1.5rem;
+          background-color: white;
+          color: #6b21a8;
+          font-weight: 600;
+          border-radius: 8px;
+          text-decoration: none;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+          transition: background-color 0.2s ease;
+        }
+
+        .freeaccess__button:hover {
+          background-color: #f3e8ff;
+        }
+    </style>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* FINAL HEADER STYLING */
+        .header-blue-gradient {
+            background: #3495D7 !important;
+            background: -webkit-linear-gradient(135deg, #3495D7, #2C4156) !important;
+            background: -moz-linear-gradient(135deg, #3495D7, #2C4156) !important;
+            background: linear-gradient(135deg, #3495D7, #2C4156) !important;
+            background-image: -webkit-linear-gradient(135deg, #3495D7, #2C4156) !important;
+            background-image: -moz-linear-gradient(135deg, #3495D7, #2C4156) !important;
+            background-image: linear-gradient(135deg, #3495D7, #2C4156) !important;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container" style="display: flex; align-items: center; gap: 20px;">
-            <div class="logo-container" style="flex: 0 0 auto; filter: drop-shadow(-15px -8px 12px rgba(0, 0, 0, 0.5));">
-                <img src="assets/images/finding_founders_logo_white_transparent.png" alt="Finding Founders Logo" style="max-height: 200px; width: auto;">
-            </div>
-            <div style="flex: 1;">
-                <h1>Finding Founders</h1>
-                <p class="tagline">They're Out There — And They're Looking for You Too.</p>
+    <header class="header header-blue-gradient">
+        <div class="header__container">
+            <div class="header__content">
+                <div class="header__logo-container">
+                    <picture>
+                        <source srcset="assets/images/optimized/logo.webp" type="image/webp">
+                        <img src="assets/images/finding_founders_logo_white_transparent.png" alt="Finding Founders Logo" class="header__logo">
+                    </picture>
+                    <div class="header__logo-pointer">
+                      <svg width="100" height="50" viewBox="0 0 100 50" class="header__logo-arrow">
+                        <defs>
+                          <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L6,3 z" fill="#fff" />
+                          </marker>
+                        </defs>
+                        <path
+                          d="M10,25 Q35,5 75,30"
+                          stroke="#fff"
+                          stroke-width="2"
+                          fill="none"
+                          marker-end="url(#arrowhead)"
+                        />
+                      </svg>
+                      <div class="header__callout">
+                        <span class="header__callout-text">They're looking for you too.</span>
+                      </div>
+                    </div>
+                </div>
+                <div class="header__title-container">
+                    <h1 class="header__title">Finding Founders</h1>
+                    <p class="header__subtitle">... think Tinder for Startups</p>
+                </div>
             </div>
         </div>
     </header>
     
-    <section id="about" class="section">
-        <div class="container">
-            <h2>Tinder for Startups</h2>
-            <p class="tagline">Start swiping!</p>
+    <section id="hero" class="hero">
+        <div class="hero__container">
+            <h2 class="hero__title">Swipe <span class="hero__title-dot">•</span> Match <span class="hero__title-dot">•</span> Join</h2>
+            <p class="hero__tagline">We match <strong class="hero__highlight">Startups</strong> with <strong class="hero__highlight">Contributors</strong> ready to work for <strong class="hero__highlight">partial Ownership</strong></p>
+        </div>
+    </section>
+    
+    <section id="about" class="about">
+        <div class="about__container">
             <div class="app-showcase">
                 <div class="app-text">
-                    <p>Let AI connect you with people or ideas that truly fit—aligned in vision, values, and ambition.</p>
+                    <h3>Building a Startup?</h3>
+                    <p><strong>Don't build it alone.</strong></p>
+                    <p>We connect founders with equity-driven contributors - designers, developers, marketers, operators, strategists, students, even lawyers - people ready to join a mission they believe in.</p>
+
+                    <h3>Want to Join One?</h3>
+                    <p><strong>Work on something that matters to you.</strong></p>
                     
-                    <h3>Have an idea? Start here.</h3>
-                    <p>You've got a startup to build. What you need is the right people to build it with.</p>
+                    <p>No matter your passion, skill set, or time availability, there's a startup out there that not only wants you - but needs you.</p>
+                    <p>We match you with early-stage teams aligned to your strengths, time, and drive to help build something real.</p>
                     
-                    <p>Create a profile, share your vision, and let our platform match you with potential co-founders, early hires, or advisors who believe in what you're doing.</p>
-                    <p style="font-weight: bold;">Swipe to connect. Let AI help with interviews and vetting. Find your team—fast.</p>
+                    <p class="highlight-text">Earn equity in what you help create.</p>
                     
-                    <h3>Want to join something that matters?</h3>
-                    <p>Startups aren't just for founders anymore.</p>
-                    <p>You might be a marketer, a lawyer, a student, or someone looking to contribute a few hours a week—or go all in.</p>
-                    
-                    <p>We match people like you with early-stage startups that align with your skills, your schedule, and your values.</p>
-                    <p>Earn equity. Gain experience. Help build something real from day one.</p>
-                    
-                    <p style="font-weight: bold; font-size: 1.1em;">You're not applying for a job. You're stepping into a mission.</p>
-                    
-                    <p style="font-style: italic; color: #555; font-size: 0.9em; line-height: 1.6;">
-                        Imagine waking up tomorrow genuinely excited—because you're building something that matters.
-                        <br><br>
-                        This isn't just a side project or a résumé boost. It's a chance to replace your job with purpose, your hours with ownership, and your effort with real equity.
-                    </p>
+                    <div class="highlight-block">
+                        <p>Imagine waking up tomorrow genuinely excited - because you're building something that matters to you!</p>
+                        <hr class="hr-gradient">
+                        <p><strong>This isn't just a side project or a résumé boost. It's a chance to replace your job with purpose, your hours with ownership, and your effort with real equity.</strong></p>
+                    </div>
                 </div>
                 <div class="app-image">
-                    <img src="assets/images/app_interface.png" alt="Finding Founders App Interface">
-                </div>
-                
-                <div class="beta-card">
-                    <h3>For Contributors</h3>
-                    <p>Gain early access to projects and teams that could define the next big thing. As an early member, you'll have the opportunity to secure more significant equity and responsibility than later joiners.</p>
-                    <p><strong>Exclusive Perk:</strong> First 1,000 members receive a special "Founding Member" badge and priority matching for life.</p>
-                </div>
-                
-                <div class="beta-card">
-                    <h3>For Investors</h3>
-                    <p>Get a first look at promising teams forming through our platform. Our early data shows that teams that meet through our matching system have a higher rate of successful funding rounds.</p>
-                    <p><strong>Exclusive Perk:</strong> Early investor access to our deal flow and analytics dashboard.</p>
-                </div>
-            </div>
-            
-            <div class="beta-cta">
-                <p>Join our waitlist now to secure your early adopter benefits and help us build the future of startup team formation.</p>
-                <a href="#waitlist" class="btn btn-primary">Join Waitlist</a>
-            </div>
-        </div>
-    </section>
-    
-    <section class="section">
-        <div class="container">
-            <h2>Own the Network Effects</h2>
-            <p>We're working with Made With Chat, a platform that helps anyone launch a startup with the help of AI.</p>
-            
-            <p>Here's where it gets exciting. If you invite someone who starts a company through Made With Chat, and they succeed, you receive 10 percent of what MWC earns from that company.</p>
-            
-            <p>If MWC owns 1% of the next Uber, or 1% of the next Tinder, and you introduced that founder, you'd earn 10% of that equity. That alone would be life-changing. But what if someone creates the next Facebook? It sounded crazy when we first heard it—but it's true: if you introduce a founder who builds the next Facebook, and MWC owns just 1%, you would earn 10% of that. That's $1.5 billion—just for making the connection.</p>
-            
-            <p>You don't need capital. You don't need to be a founder. You just need to be the spark.</p>
-            
-            <h3>This Only Works if We All Show Up</h3>
-            <p>Platforms don't change the game. People do. And if we want to see a more fair and mission-aligned startup world, we have to build it as a community.</p>
-            
-            <p>So share this. With intention. With energy. With people who deserve to be part of something bigger than a paycheck.</p>
-            
-            <p>Because in this network, when one of us wins, all of us win.</p>
-        </div>
-    </section>
-    
-    <!-- VIP Interview Automation Section -->
-    <section id="vip-interview" class="section vip-feature">
-        <div class="container">
-            <div class="vip-badge">
-                <span>Premium Feature</span>
-            </div>
-            <h2>VIP Interview Automation</h2>
-            <div class="vip-showcase">
-                <div class="vip-image">
-                    <img src="assets/images/vip_interview.png" alt="AI-Powered Interview Automation">
-                </div>
-                <div class="vip-text">
-                    <p class="vip-description">Companies on our VIP plan can upload a video prompt, which is used in an AI-led, Zoom-like interview with candidates. The AI asks questions, holds a conversation, and generates a report highlighting high-quality responses. This lets companies follow up only with candidates worth their time.</p>
-                    <div class="vip-benefits">
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="benefit-text">
-                                <h4>Save Time</h4>
-                                <p>Automate initial screenings and focus only on the most promising candidates.</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <div class="benefit-text">
-                                <h4>Better Matches</h4>
-                                <p>AI analyzes responses for both content and cultural fit with your startup.</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="benefit-text">
-                                <h4>Data-Driven</h4>
-                                <p>Get detailed reports on candidate responses, including sentiment and skill assessment.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#vip-plan" class="btn btn-vip">Upgrade to VIP</a>
+                    <picture>
+                        <source srcset="assets/images/optimized/app_interface.webp" type="image/webp">
+                        <img src="assets/images/app_interface.png" alt="Finding Founders App Interface" class="app-interface-img">
+                    </picture>
                 </div>
             </div>
         </div>
     </section>
     
-    <section id="plans" class="section">
-        <div class="container">
-            <h2>Contributor Access Plans</h2>
-            <div class="plans-grid">
-                <!-- Standard Plans Row -->
-                <div class="standard-plans">
-                    <div class="plan-card">
-                        <div class="plan-header">
-                            <div class="plan-icon">
-                                <i class="fas fa-seedling"></i>
+    <!-- New Pricing Section with Clean Implementation -->
+    <section id="pricing" class="pricing-section">
+        <div class="pricing-container">
+            <h2 class="pricing-title">Pricing</h2>
+            
+            <div class="pricing-toggle">
+                <span class="pricing-toggle-option pricing-toggle-option--active" data-plan="contributor">Contributor</span>
+                <label class="pricing-toggle-switch">
+                    <input type="checkbox" id="pricing-toggle-input">
+                    <span class="pricing-toggle-slider"></span>
+                </label>
+                <span class="pricing-toggle-option" data-plan="startup">Startup</span>
+            </div>
+            
+            <div class="pricing-plans-container">
+                <!-- Contributor Plans -->
+                <div class="pricing-plans pricing-plans--contributor active">
+                    <div class="pricing-grid">
+                        <div class="pricing-standard">
+                            <!-- Free Plan -->
+                            <div class="pricing-card">
+                                <div class="pricing-header">
+                                    <div class="pricing-icon">
+                                        <i class="fas fa-seedling"></i>
+                                    </div>
+                                    <h3>Free Plan</h3>
+                                </div>
+                                <div class="pricing-body">
+                                    <div class="pricing-price">$0<span>/month</span></div>
+                                    <p>Try it out. See what's out there.</p>
+                                    <ul class="pricing-features">
+                                        <li>Fill out your contributor profile</li>
+                                        <li>Get limited free swipes each month</li>
+                                        <li>Upgrade anytime</li>
+                                    </ul>
+                                    <a href="#" class="pricing-button">Try for free</a>
+                                </div>
                             </div>
-                            <h3>Free Plan</h3>
-                        </div>
-                        <div class="plan-body">
-                            <div class="price">$0<span>/month</span></div>
-                            <p>Try it out. See what's out there.</p>
-                            <ul class="feature-list">
-                                <li>Fill out your contributor profile and skills template</li>
-                                <li>Get limited free swipes each month</li>
-                                <li>View a selection of startup ideas and founders</li>
-                                <li>Option to upgrade anytime</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="plan-card">
-                        <div class="plan-header">
-                            <div class="plan-icon">
-                                <i class="fas fa-rocket"></i>
+                            
+                            <!-- Pro Plan -->
+                            <div class="pricing-card pricing-card--popular">
+                                <div class="pricing-tag">Most Popular</div>
+                                <div class="pricing-header">
+                                    <div class="pricing-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h3>Pro Plan</h3>
+                                </div>
+                                <div class="pricing-body">
+                                    <div class="pricing-label">
+                                        <span class="pricing-original">$5</span><span class="pricing-unit">/month</span>
+                                        <span class="pricing-promo">
+                                            <span class="pricing-promo-text">Currently Free</span>
+                                            <small class="pricing-note">See below</small>
+                                        </span>
+                                    </div>
+                                    <p>For contributors who want visibility.</p>
+                                    <ul class="pricing-features">
+                                        <li>Unlimited swipes</li>
+                                        <li>More startups see your profile</li>
+                                        <li>See who swiped right on you</li>
+                                        <li>Shows you're an active contributor</li>
+                                        <li>Pro badge shown on your profile</li>
+                                    </ul>
+                                    <a href="#" class="pricing-button">Choose Plan</a>
+                                </div>
                             </div>
-                            <h3>Basic Plan</h3>
                         </div>
-                        <div class="plan-body">
-                            <div class="price">$5<span>/month</span></div>
-                            <p>For active contributors ready to match.</p>
-                            <ul class="feature-list">
-                                <li>Unlimited swipes</li>
-                                <li>Connect with founders and startups that match your interests</li>
-                                <li>See who swiped right on you</li>
-                                <li>Ability to request introductions</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="plan-card">
-                        <div class="plan-header">
-                            <div class="plan-icon">
-                                <i class="fas fa-star"></i>
+                        
+                        <!-- VIP Plan -->
+                        <div class="pricing-card pricing-card--vip">
+                            <div class="pricing-ribbon"></div>
+                            <div class="pricing-header pricing-header--vip">
+                                <div class="pricing-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <h3>VIP Plan</h3>
                             </div>
-                            <h3>Pro Plan</h3>
-                        </div>
-                        <div class="plan-body">
-                            <div class="price">$15<span>/month</span></div>
-                            <p>For contributors who want to stand out.</p>
-                            <ul class="feature-list">
-                                <li>Everything in Basic</li>
-                                <li>Send a private message along with your swipe</li>
-                                <li>Get featured more prominently in matching results</li>
-                                <li>Priority access to newly listed startups</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- VIP Plan Row (Highlighted) -->
-                <div class="vip-plan-container" id="vip-plan">
-                    <div class="plan-card vip-card">
-                        <div class="vip-ribbon">Premium</div>
-                        <div class="plan-header vip-header">
-                            <div class="plan-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <h3>VIP Plan</h3>
-                        </div>
-                        <div class="plan-body vip-body">
-                            <div class="price">$25<span>/month</span></div>
-                            <p>For high-intent contributors serious about joining the right team.</p>
-                            <div class="vip-content">
-                                <div class="vip-features">
-                                    <ul class="feature-list">
-                                        <li>Everything in Pro</li>
-                                        <li>Message startups even before they swipe on you.<br><span style="font-size: 0.85em; opacity: 0.9;">(Our AI blocks spam, promotions, or anything that feels like pressure or harassment. If your message crosses the line, it won't be sent, and your account may be removed.)</span></li>
-                                        <li>Appear at the top of search and matching results</li>
-                                        <li>Early access to exclusive opportunities and private beta features</li>
+                            <div class="pricing-body pricing-body--vip">
+                                <div class="pricing-price">$15<span>/month</span></div>
+                                <p>For contributors ready to join the right team fast.</p>
+                                <div class="pricing-vip-content">
+                                    <ul class="pricing-features">
+                                        <li class="pricing-feature--heading">Includes everything in Pro, plus:</li>
+                                        <li>Send a personal message with your swipe</li>
+                                        <li>Priority placement in contributor feeds and search</li>
+                                        <li>Priority access to newly listed startups</li>
+                                        <li>Message startups even before they swipe on you<br><span class="pricing-note--small">(Our AI blocks spam, promotions, or anything that feels like pressure or harassment.)</span></li>
+                                        <li>Early access to exclusive features and upcoming tools</li>
                                         <li>VIP badge visible on your profile to signal commitment</li>
-                                        <li class="highlight-feature">Access to AI Interview Automation</li>
                                     </ul>
                                 </div>
-                                <div class="vip-image-small">
-                                    <img src="assets/images/vip_interview.png" alt="AI Interview Automation">
+                                <a href="#" class="pricing-button pricing-button--vip">Get VIP Access</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Startup Plans -->
+                <div class="pricing-plans pricing-plans--startup">
+                    <div class="pricing-grid">
+                        <div class="pricing-standard">
+                            <!-- Starter Plan -->
+                            <div class="pricing-card">
+                                <div class="pricing-header">
+                                    <div class="pricing-icon">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h3>Starter</h3>
+                                </div>
+                                <div class="pricing-body">
+                                    <div class="pricing-label">
+                                        <span class="pricing-original">$5</span><span class="pricing-unit">/month</span>
+                                        <span class="pricing-promo">
+                                            <span class="pricing-promo-text">Currently Free</span>
+                                            <small class="pricing-note">See below</small>
+                                        </span>
+                                    </div>
+                                    <p>Create your profile and see who's out there.</p>
+                                    <ul class="pricing-features">
+                                        <li>Create your startup profile</li>
+                                        <li>List your idea and the roles you're hiring for</li>
+                                        <li>Swipe on contributors</li>
+                                        <li>View limited contributor profiles</li>
+                                        <li>Match when both sides swipe right</li>
+                                        <li>Upgrade anytime</li>
+                                    </ul>
+                                    <a href="#" class="pricing-button">Get Started</a>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-vip">Get VIP Access</a>
+                            
+                            <!-- Builder Plan -->
+                            <div class="pricing-card pricing-card--popular">
+                                <div class="pricing-tag">Most Popular</div>
+                                <div class="pricing-header">
+                                    <div class="pricing-icon">
+                                        <i class="fas fa-rocket"></i>
+                                    </div>
+                                    <h3>Builder</h3>
+                                </div>
+                                <div class="pricing-body">
+                                    <div class="pricing-price">$19<span>/month</span></div>
+                                    <p>Find the right people, message matches, and grow your team fast.</p>
+                                    <ul class="pricing-features">
+                                        <li class="pricing-feature--heading">Includes everything in Starter, plus:</li>
+                                        <li>Unlimited swipes</li>
+                                        <li>View full contributor profiles</li>
+                                        <li>Message contributors after a match</li>
+                                        <li>Filter contributors by skill, availability, or role</li>
+                                        <li>Boosted visibility in contributor feeds</li>
+                                        <li>Save contributors to shortlist</li>
+                                        <li>See who's viewed or swiped on your profile</li>
+                                    </ul>
+                                    <a href="#" class="pricing-button">Choose Plan</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- VIP Plan -->
+                        <div class="pricing-card pricing-card--vip">
+                            <div class="pricing-ribbon"></div>
+                            <div class="pricing-header pricing-header--vip">
+                                <div class="pricing-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <h3>VIP</h3>
+                            </div>
+                            <div class="pricing-body pricing-body--vip">
+                                <div class="pricing-price">$79<span>/month</span></div>
+                                <p>Put your startup in front of top talent - with premium visibility, AI tools, and white-glove support.</p>
+                                <div class="pricing-vip-content">
+                                    <ul class="pricing-features">
+                                        <li class="pricing-feature--heading">Includes everything in Builder, plus:</li>
+                                        <li>Message contributors before they swipe</li>
+                                        <li>Featured placement in contributor swipe decks and search</li>
+                                        <li>Access to pre-vetted contributor pools</li>
+                                        <li>AI Interview Automation</li>
+                                        <li>Weekly contributor recommendations via AI</li>
+                                        <li>Contributor engagement insights (activity + responsiveness)</li>
+                                        <li>Priority support and early access to private beta tools</li>
+                                        <li>Optional white-glove outreach by our team</li>
+                                        <li>VIP badge on profile for visibility and trust</li>
+                                    </ul>
+                                </div>
+                                <a href="#" class="pricing-button pricing-button--vip">Get VIP Access</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+            <div class="pricing-footer-note" style="text-align: center; margin: 30px auto 20px; color: #6c757d; font-size: 0.95rem; max-width: 1000px; padding: 0 20px;">
+                <p>All plans include access to discovery, profile editing, and swipe-based matching. (when available)</p>
+            </div>
+        </div>
     </section>
     
+    <style>
+        /* New Pricing Section Styles */
+        .pricing-section {
+            padding: 100px 0 50px; /* Base bottom padding */
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: visible;
+            margin-bottom: 50px; /* Reduced margin-bottom since we're using padding for spacing */
+            min-height: 1350px; /* Changed minimum height to 1350px */
+        }
+        
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .pricing-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #212529;
+            font-family: var(--font-heading, 'Poppins', sans-serif);
+            font-weight: 600;
+        }
+        
+        /* Toggle Switch */
+        .pricing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 0 auto 40px;
+            max-width: 400px;
+        }
+        
+        .pricing-toggle-option {
+            font-size: 1.2rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-family: var(--font-heading, 'Poppins', sans-serif);
+            font-weight: 500;
+        }
+        
+        .pricing-toggle-option--active {
+            color: #4E2A84;
+            font-weight: 600;
+        }
+        
+        .pricing-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin: 0 15px;
+            vertical-align: middle;
+        }
+        
+        .pricing-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .pricing-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .pricing-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input:checked + .pricing-toggle-slider {
+            background-color: #6e45e2;
+        }
+        
+        input:focus + .pricing-toggle-slider {
+            box-shadow: 0 0 1px #4E2A84;
+        }
+        
+        input:checked + .pricing-toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Plans Container */
+        .pricing-plans-container {
+            position: relative;
+            min-height: 600px; /* Base minimum height */
+            transition: min-height 0.5s ease;
+        }
+        
+        .pricing-plans {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .pricing-plans.active {
+            position: relative; /* Change from absolute to relative when active */
+            opacity: 1;
+            visibility: visible;
+            z-index: 2;
+        }
+        
+        /* Plan Grid Layout */
+        .pricing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch; /* Stretch cards to match height */
+            align-content: flex-start; /* Align rows to the top */
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 40px 0; /* Increased vertical padding */
+            min-height: 1150px; /* Adjusted minimum height to maintain proportions */
+        }
+        
+        .pricing-standard {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Card Styling */
+        .pricing-card {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 320px;
+            min-height: 700px; /* Increased minimum height for better content fit */
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            align-self: flex-start; /* Align cards to top of flex container */
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        /* Popular Card Styling */
+        .pricing-card--popular {
+            border: 2px solid #3498db;
+        }
+        
+        .pricing-tag {
+            position: absolute;
+            top: 25px; /* Keep top position */
+            right: -50px; /* Moved 25 pixels left */
+            background: #3498db;
+            color: white;
+            padding: 10px 60px; /* Increased padding for longer background */
+            font-size: 0.9rem;
+            transform: rotate(45deg); /* Keep the diagonal angle */
+            transform-origin: center; /* Ensure rotation from center */
+            z-index: 10;
+        }
+        
+        /* VIP Card Styling */
+        .pricing-card--vip {
+            background: linear-gradient(145deg, #303c54, #1f2733);
+            color: white;
+            width: 360px;
+            margin-top: 0; /* Reset top margin to align with other cards */
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 750px;
+            position: relative;
+            top: 0; /* Reset any vertical positioning */
+        }
+        
+        .pricing-ribbon {
+            position: absolute;
+            top: 0;
+            right: -35px; /* Moved another 10 pixels to the right */
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+        }
+        
+        .pricing-ribbon:before {
+            content: "Premium";
+            position: absolute;
+            display: block;
+            width: 225px;
+            padding: 5px 0;
+            background-color: #9b59b6;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            transform: rotate(45deg);
+            right: -25px;
+            top: 30px;
+        }
+        
+        /* Card Header Styling */
+        .pricing-header {
+            padding: 15px 20px 15px;
+            text-align: center;
+            background: #2C3D4F;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .pricing-card--vip .pricing-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .pricing-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: #3498db;
+        }
+        
+        .pricing-card--vip .pricing-icon {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9b59b6;
+        }
+        
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-family: var(--font-heading, 'Poppins', sans-serif);
+        }
+        
+        /* Card Body Styling */
+        .pricing-body {
+            padding: 30px 25px;
+            text-align: center;
+            flex: 1; /* Make the body take up available space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #212529;
+        }
+        
+        .pricing-card--vip .pricing-price {
+            color: white;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6c757d;
+        }
+        
+        .pricing-card--vip .pricing-price span {
+            color: #e9ecef;
+        }
+        
+        .pricing-label {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+        
+        .pricing-label .pricing-original,
+        .pricing-label .pricing-unit {
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+        }
+        
+        .pricing-unit {
+            margin-left: 0;
+            margin-right: 4px;
+        }
+        
+        .pricing-original {
+            position: relative;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #212529;
+            margin: 0 0 0 5px;
+            padding: 0 8px 0 0;
+            overflow: hidden;
+        }
+        
+        .pricing-original::after {
+            content: '';
+            position: absolute;
+            left: -5px;
+            right: -5px;
+            top: 50%;
+            height: 4px;
+            background-color: #ff4d4d;
+            transform: rotate(-15deg) translateY(-50%) scaleX(1.2);
+            transform-origin: center;
+            z-index: 1;
+        }
+        
+        .pricing-card--vip .pricing-original {
+            color: white;
+        }
+        
+        .pricing-unit {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6c757d;
+        }
+        
+        .pricing-card--vip .pricing-unit {
+            color: #e9ecef;
+        }
+        
+        .pricing-promo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .pricing-promo-text {
+            background-color: #2ecc71;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .pricing-note {
+            display: none;
+            font-size: 0.75rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 3px;
+        }
+        
+        .pricing-card--vip .pricing-note {
+            display: none;
+            color: #e9ecef;
+        }
+        
+        .pricing-note--small {
+            font-size: 0.75rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .pricing-card--vip .pricing-note--small {
+            color: #e9ecef;
+        }
+        
+        .pricing-body p {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card--vip .pricing-body p {
+            color: #e9ecef;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 30px;
+            text-align: left;
+            flex: 1; /* Take up available space */
+        }
+        
+        .pricing-features li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .pricing-card--vip .pricing-features li {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .pricing-features li:before {
+            content: "\2713";
+            color: #2ecc71;
+            position: absolute;
+            left: 0;
+        }
+        
+        .pricing-card--vip .pricing-features li:before {
+            color: #9b59b6;
+        }
+        
+        .pricing-feature--heading {
+            font-weight: 600;
+            color: #495057;
+            margin-top: 5px;
+        }
+        
+        .pricing-card--vip .pricing-feature--heading {
+            color: white;
+        }
+        
+        .pricing-vip-content {
+            margin-bottom: 25px;
+        }
+        
+        .pricing-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .pricing-button--vip {
+            background-color: #9b59b6;
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        }
+        
+        .pricing-button--vip:hover {
+            background-color: #8e44ad;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(155, 89, 182, 0.4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .pricing-card {
+                width: 100%;
+                max-width: 320px;
+                margin-bottom: 30px;
+            }
+            
+            .pricing-card--vip {
+                width: 100%;
+                max-width: 360px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .pricing-title {
+                font-size: 2rem;
+            }
+            
+            .pricing-toggle-option {
+                font-size: 1rem;
+            }
+            
+            .pricing-grid {
+                gap: 20px;
+            }
+            
+            .pricing-standard {
+                gap: 20px;
+            }
+        }
+        
+        /* All header styles have been consolidated in the external styles.css file */
+    </style>
+    
+    <script>
+        // New Pricing Toggle Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const pricingToggleInput = document.getElementById('pricing-toggle-input');
+            const contributorOption = document.querySelector('.pricing-toggle-option[data-plan="contributor"]');
+            const startupOption = document.querySelector('.pricing-toggle-option[data-plan="startup"]');
+            const contributorPlans = document.querySelector('.pricing-plans--contributor');
+            
+            // Function to toggle between contributor and startup plans
+            function togglePricingPlans() {
+                const isStartupActive = pricingToggleInput.checked;
+                const startupPlans = document.querySelector('.pricing-plans--startup');
+                const plansContainer = document.querySelector('.pricing-plans-container');
+                const pricingSection = document.querySelector('.pricing-section');
+                
+                // Update toggle options appearance
+                contributorOption.classList.toggle('pricing-toggle-option--active', !isStartupActive);
+                startupOption.classList.toggle('pricing-toggle-option--active', isStartupActive);
+                
+                if (isStartupActive) {
+                    // Hide contributor plans
+                    contributorPlans.classList.remove('active');
+                    
+                    // Show startup plans after a brief delay for animation
+                    setTimeout(() => {
+                        startupPlans.classList.add('active');
+                        
+                        // Adjust container height to fit startup plans content
+                        const startupHeight = startupPlans.scrollHeight;
+                        plansContainer.style.minHeight = `${startupHeight}px`;
+                    }, 300);
+                } else {
+                    // Hide startup plans
+                    startupPlans.classList.remove('active');
+                    
+                    // Show contributor plans after a brief delay for animation
+                    setTimeout(() => {
+                        contributorPlans.classList.add('active');
+                        
+                        // Adjust container height to fit contributor plans content
+                        const contributorHeight = contributorPlans.scrollHeight;
+                        plansContainer.style.minHeight = `${contributorHeight}px`;
+                    }, 300);
+                }
+            }
+            
+            // Add event listener to toggle input
+            pricingToggleInput.addEventListener('change', togglePricingPlans);
+            
+            // Add click event listeners to toggle options
+            contributorOption.addEventListener('click', function() {
+                pricingToggleInput.checked = false;
+                togglePricingPlans();
+            });
+            
+            startupOption.addEventListener('click', function() {
+                pricingToggleInput.checked = true;
+                togglePricingPlans();
+            });
+            
+            // Initialize to contributor plans on page load
+            pricingToggleInput.checked = false;
+            contributorOption.classList.add('pricing-toggle-option--active');
+            startupOption.classList.remove('pricing-toggle-option--active');
+            contributorPlans.classList.add('active');
+        });
+    </script>
+    
+    <!-- Earn Ownership by Referring Section -->
+    <section class="referral">
+        <div class="referral__container">
+            <h2 class="referral__title">Earn Ownership by Referring</h2>
+            <!-- Visual Flow -->
+            <div class="visual-flow" style="margin: 20px auto 30px;">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-step__icon"><i class="fas fa-user-plus"></i></div>
+                        <p>Refer a builder</p>
+                    </div>
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-step__icon"><i class="fas fa-rocket"></i></div>
+                        <p>They launch via MWC</p>
+                    </div>
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-step__icon"><i class="fas fa-handshake"></i></div>
+                        <p>MWC earns equity</p>
+                    </div>
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step flow-step--highlight">
+                        <div class="flow-step__icon"><i class="fas fa-hand-holding-usd"></i></div>
+                        <p>You get 10% of their equity</p>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="referral__description">
+                When you refer someone who builds a startup through Made With Chat, you earn 10% of MWC's stake in their company - just for making the connection.
+            </p>
+            
+
+            <div class="referral-card" style="max-width: 700px; margin: 0 auto 40px;">
+                <h3 class="referral-card__title">No capital needed.<br>No founder title required.</h3>
+                <p class="referral-card__description">
+                    You just need to be the spark. Start sharing and earn a real stake in the companies you help ignite.
+                </p>
+                <a href="#referral" class="referral-btn">Start Referring</a>
+            </div>
+            
+            <div class="referral-card" style="max-width: 700px; margin: 0 auto 40px; background-color: #e6f3ff; padding: 30px; border-radius: 10px;">
+                <h3 class="referral-card__title" style="color: #000;">Refer the Next Zuckerberg.</h3>
+                <p class="referral-card__description" style="color: #000;">They build. If MWC only owns 1%. You get 10% of that.</p>
+                <p class="referral-card__description" style="color: #000;">That would be $1.5B - just for making an intro.</p>
+                <p class="referral-card__description" style="color: #000;">Crazy right? Until it happens.</p>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    <!-- VIP Interview Automation Section -->
+    <section id="vip-interview" class="vip">
+        <div class="vip__container">
+            <div class="vip__badge">
+                <span>Premium Feature</span>
+            </div>
+            <h2 class="vip__title">VIP Interview Automation</h2>
+            <div class="vip-showcase">
+                <div class="vip__image">
+                    <picture>
+                        <img src="assets/images/optimized/vip_interview.webp" alt="AI-Powered Interview Automation" class="vip__img" id="vip-interview-img">
+                    </picture>
+                </div>
+                <div class="vip__content">
+                    <p class="vip__description">Companies on our VIP plan can upload a video prompt, which is used in an AI-led, Zoom-like interview with candidates. The AI asks questions, holds a conversation, and generates a report highlighting high-quality responses. This lets companies follow up only with candidates worth their time.</p>
+                    <div class="vip-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-item__icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="benefit-item__content">
+                                <h4 class="benefit-item__title">Save Time</h4>
+                                <p class="benefit-item__text">Automate initial screenings and focus only on the most promising candidates.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-item__icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="benefit-item__content">
+                                <h4 class="benefit-item__title">Better Matches</h4>
+                                <p class="benefit-item__text">AI analyzes responses for both content and cultural fit with your startup.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-item__icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="benefit-item__content">
+                                <h4 class="benefit-item__title">Data-Driven</h4>
+                                <p class="benefit-item__text">Get detailed reports on candidate responses, including sentiment and skill assessment.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#vip-plan" class="btn btn--vip">Upgrade to VIP</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+<section class="freeaccess">
+  <div class="freeaccess__content">
+    <span class="freeaccess__tag">Limited Time</span>
+    <h2>Earn Free Access</h2>
+    <ul>
+      <li><strong>$5 credit</strong> for every signup - even free users</li>
+      <li>Use credits on any plan. Stack them.</li>
+      <li>Unlock full access - just by sharing.</li>
+    </ul>
+    <p class="freeaccess__note">Offer ends once we reach 10,000 users or 100 startups.</p>
+    <a href="/referrals" class="freeaccess__button">Start Referring</a>
+  </div>
+</section>
+
+<style>
+    /* Investor Section Styling */
+    .investor {
+        background-color: #f8f9fa; 
+        padding: 15px 0; 
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+        position: relative; 
+        z-index: 10; 
+        margin: 20px 30px 0; 
+        border-radius: 20px;
+    }
+    
+    .investor__container {
+        text-align: center; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        padding: 0 20px;
+    }
+    
+    .investor__title {
+        text-align: center; 
+        font-size: 2.2rem; 
+        margin: 0 auto 10px; 
+        padding: 5px 20px; 
+        font-weight: 700;
+    }
+    
+    .investor__subtitle {
+        font-size: 1.2rem; 
+        color: #000; 
+        line-height: 1.5; 
+        max-width: 100%; 
+        margin: 0 auto 10px; 
+        padding: 0 20px; 
+        font-weight: 400;
+    }
+    
+    .investor__readmore {
+        max-height: 0; 
+        overflow: hidden; 
+        transition: max-height 0.5s ease-in-out;
+    }
+    
+    .investor__text {
+        padding: 0 20px; 
+        font-size: 1.2rem; 
+        color: #000; 
+        line-height: 1.5; 
+        max-width: 100%; 
+        margin: 0 auto;
+    }
+    
+    .investor__heading {
+        text-align: center; 
+        font-size: 1.8rem; 
+        margin: 20px auto 0px; 
+        padding: 5px 20px; 
+        font-weight: 700;
+    }
+    
+    .investor__benefits {
+        padding: 0 40px; 
+        font-size: 1.2rem; 
+        color: #000; 
+        line-height: 1.5; 
+        max-width: 100%; 
+        margin: 0 auto;
+    }
+    
+    .investor__benefit {
+        margin-bottom: 10px;
+    }
+    
+    .investor__divider {
+        border: 0; 
+        border-top: 1px solid #eee; 
+        margin: 20px 0;
+    }
+    
+    .investor__contact {
+        text-align: center; 
+        font-size: 1em; 
+        line-height: 1.7; 
+        margin-top: 20px; 
+        margin-bottom: 10px; 
+        padding: 0 20px;
+    }
+    
+    .investor__email {
+        color: var(--primary); 
+        text-decoration: none;
+    }
+    
+    .investor__email-text {
+        color: #007bff; 
+        text-decoration: underline;
+    }
+    
+    .investor__button-container {
+        display: flex; 
+        justify-content: center; 
+        width: 100%; 
+        padding: 0 20px;
+    }
+</style>
+
+<section id="investor-opportunities" class="investor">
+    <div class="investor__container">
+        <div class="investor__content">
+            <h2 class="investor__title">Investor Opportunities</h2>
+            <p class="investor__subtitle">Unlock early access to high-potential startups.</p>
+            
+            <div class="investor__readmore" id="investor-read-more-content">
+                <p class="investor__text">Gain first-look access to a curated pipeline of emerging teams.
+Our platform surfaces untapped talent building innovative companies - giving you an edge before they hit the radar.</p>
+
+                <h3 class="investor__heading">Why Early Access Matters</h3>
+                <div class="investor__benefits">
+                    <div class="investor__benefit"><strong>Enhanced Deal Flow:</strong> Get a steady stream of startups.</div>
+                    <div class="investor__benefit"><strong>Influence and Support:</strong> Engage early to shape strategy.</div>
+                    <div class="investor__benefit"><strong>Advantage:</strong> Secure better terms than later-stage investors.</div>
+                </div>
+                <hr class="investor__divider">
+                <p class="investor__contact">
+                    For further details or to discuss a potential partnership,<br> please feel free to <a href="mailto:mike@madewithchat.com" class="investor__email">email us directly at <span class="investor__email-text">mike@madewithchat.com</span></a>
+                </p>
+            </div>
+            <div class="investor__button-container">
+                <button id="investor-read-more-button">Read More <span id="investor-down-arrow">&#9660;</span></button>
+            </div>
+        </div>
+    </div>
+</section>
+    
+    <script>
+        document.getElementById('investor-read-more-button').addEventListener('click', function() {
+            var content = document.getElementById('investor-read-more-content');
+            var readMoreButton = this;
+            var content = document.getElementById('investor-read-more-content');
+            var contactLink = document.getElementById('investor-contact-us-link');
+
+            // Expand content
+            content.style.maxHeight = content.scrollHeight + 'px';
+            
+            // Hide the "Read More" button
+            // Adding a little fade out effect for the button
+            readMoreButton.style.transition = 'opacity 0.3s ease-out';
+            readMoreButton.style.opacity = '0';
+            setTimeout(() => {
+                readMoreButton.style.display = 'none';
+            }, 300); // Wait for opacity transition to finish
+            
+            // Show the "Contact Us" link/button after a short delay to allow content to expand
+            // and original button to fade.
+            setTimeout(() => {
+                if (contactLink) { 
+                    contactLink.style.display = 'block'; 
+                    contactLink.style.opacity = '0'; // Start transparent
+                    // Force reflow before adding transition for opacity
+                    void contactLink.offsetWidth;
+                    contactLink.style.transition = 'opacity 0.3s ease-in';
+                    contactLink.style.opacity = '1'; // Fade in
+                }
+            }, 350); // Stagger the appearance of the new button
+
+            // To prevent this listener from firing again if anything goes wrong with display:none
+            readMoreButton.removeEventListener('click', arguments.callee); // arguments.callee is fine here
+        });
+    </script>
+
+
     <section class="section">
         <div class="container">
             <h2>Executive Summary</h2>
@@ -1238,13 +2466,13 @@
     <section class="section">
         <div class="container">
             <h2>Join the Movement</h2>
-            <p>Finding Founders is more than a platform—it's a movement to democratize startup creation and collaboration. By connecting passionate builders with visionary founders, we're creating a more inclusive, accessible, and purpose-driven entrepreneurial ecosystem.</p>
+            <p>Finding Founders is more than a platform - it's a movement to democratize startup creation and collaboration. By connecting passionate builders with visionary founders, we're creating a more inclusive, accessible, and purpose-driven entrepreneurial ecosystem.</p>
             
             <p>Whether you're a founder looking for the perfect team or a talented individual seeking meaningful projects, Finding Founders provides the community, tools, and opportunities you need to succeed.</p>
             
-            <p>Join us today and be part of building the future of entrepreneurship—where great ideas find great people, and together, they build great companies.</p>
+            <p>Join us today and be part of building the future of entrepreneurship - where great ideas find great people, and together, they build great companies.</p>
             
-            <p><strong>If this platform went viral and only 1 million people signed up, and just 10% of them paid the bare minimum of $5 each, we would generate $500,000 in monthly revenue. This simple math highlights the platform's potential for exponential revenue from even minimal conversion—driven by referral, gamification, and community incentives.</strong></p>
+            <p><strong>If this platform went viral and only 1 million people signed up, and just 10% of them paid the bare minimum of $5 each, we would generate $500,000 in monthly revenue. This simple math highlights the platform's potential for exponential revenue from even minimal conversion - driven by referral, gamification, and community incentives.</strong></p>
             
             <div style="text-align: center; margin-top: 40px;">
                 <a href="#" class="btn btn-vip">Join Finding Founders</a>
@@ -1275,5 +2503,155 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Pricing Display Setup
+        document.addEventListener('DOMContentLoaded', function() {
+            // Keep things simple - always show contributor plans only
+            const contributorOptions = document.querySelectorAll('.pricing__option[data-plan="contributor"]');
+            contributorOptions.forEach(option => {
+                option.classList.add('pricing__option--active');
+            });
+            
+            // Ensure startup options are not active
+            const startupOptions = document.querySelectorAll('.pricing__option[data-plan="startup"]');
+            startupOptions.forEach(option => {
+                option.classList.remove('pricing__option--active');
+            });
+            
+            // Make sure the toggle is set to contributor (unchecked)
+            const toggles = document.querySelectorAll('.pricing__input');
+            toggles.forEach(toggle => {
+                toggle.checked = false;
+            });
+            
+            // Initialize the view
+            updatePlanView(false); // Start with Contributor plans shown
+        });
+        
+        // Existing code
+        // Wait for everything to be loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // App interface image
+            const appImage = document.querySelector('.app-interface-img');
+            const aboutSection = document.getElementById('about');
+            
+            // VIP interview image
+            const vipImage = document.getElementById('vip-interview-img');
+            const vipSection = document.getElementById('vip-interview');
+            
+            if (!appImage || !aboutSection || !vipImage || !vipSection) return;
+            
+            // Ensure initial state has no tilt
+            appImage.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+            appImage.classList.remove('tilted');
+            vipImage.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+            vipImage.classList.remove('tilted');
+            
+            function updateTilt() {
+                if (window.innerWidth <= 767) {
+                    appImage.style.transform = 'none';
+                    vipImage.style.transform = 'none';
+                    return;
+                }
+                
+                // Update app image tilt with right rotation (10deg)
+                updateImageTilt(appImage, aboutSection, -15, 3, null, 10);
+                
+                // Update VIP image tilt with left rotation (-10deg) - starts at 50% visibility, completes at 100%
+                const vipRect = vipSection.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                
+                // Start point: when 50% of the section is in view
+                const vipStartPoint = window.scrollY + (vipRect.top - viewportHeight * 0.5);
+                // End point: when section is fully in view
+                const vipEndPoint = window.scrollY + (vipRect.top + vipRect.height * 0.5);
+                
+                let vipScrollPercentage = 0;
+                if (window.scrollY > vipStartPoint) {
+                    // Calculate percentage between start and end points
+                    vipScrollPercentage = Math.min((window.scrollY - vipStartPoint) / (vipEndPoint - vipStartPoint), 1);
+                    // Apply easing
+                    vipScrollPercentage = Math.pow(vipScrollPercentage, 0.4);
+                }
+                
+                updateImageTilt(vipImage, vipSection, 15, 3, vipScrollPercentage, -10);
+            }
+            
+            function updateImageTilt(image, section, yRotationMax, xRotationMax, customScrollPercentage = null, baseRotation = 0) {
+                let scrollPercentage = 0;
+                
+                if (customScrollPercentage !== null) {
+                    // Use provided scroll percentage if available
+                    scrollPercentage = customScrollPercentage;
+                } else {
+                    // Original scroll calculation for app image
+                    const rect = section.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    
+                    // Start tilting immediately when scrolling from top
+                    if (window.scrollY > 0) {
+                        // Calculate how far we've scrolled from top
+                        const maxScroll = section.offsetTop * 0.6; // Increased further for 100% longer scroll in total
+                        scrollPercentage = Math.min(window.scrollY / maxScroll, 1);
+                        
+                        // Apply aggressive easing for quick tilt
+                        scrollPercentage = Math.pow(scrollPercentage, 0.3);
+                    }
+                }
+                
+                // Calculate rotation based on scroll position
+                const yRotation = yRotationMax * scrollPercentage;
+                const xRotation = xRotationMax * scrollPercentage;
+                
+                // Calculate dynamic rotation (20% to 100% of base rotation based on scroll)
+                const dynamicRotation = baseRotation * (0.2 + (scrollPercentage * 0.8));
+                
+                // Apply the rotation with dynamic base rotation
+                image.style.transform = `perspective(800px) rotateY(${yRotation}deg) rotateX(${xRotation}deg) rotateZ(${dynamicRotation}deg)`;
+                
+                // Toggle class for smooth transitions
+                if (scrollPercentage > 0.1) {
+                    image.classList.add('tilted');
+                } else {
+                    image.classList.remove('tilted');
+                }
+            }
+            
+            // Update on scroll and resize
+            window.addEventListener('scroll', updateTilt, { passive: true });
+            window.addEventListener('resize', updateTilt);
+            
+            // Initial check after a small delay to ensure styles are applied
+            setTimeout(updateTilt, 100);
+            
+            // Add click handlers to all toggle inputs after they're created
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('pricing__input')) {
+                    handleToggleChange(e.target);
+                }
+            });
+        });
+            
+        </script>
+        
+        <!-- Removed old pricing toggle scripts -->
+        <script>
+            /* Pricing toggle functionality now managed by the new pricing section script */
+        </script>
+    
+    <script>
+        function toggleInvestorDetails() {
+            const details = document.getElementById("investor-details");
+            const readMoreLink = document.querySelector(".read-more-link");
+            if (details.style.display === "none") {
+                details.style.display = "block";
+                readMoreLink.textContent = "Read Less";
+            } else {
+                details.style.display = "none";
+                readMoreLink.textContent = "Read More";
+            }
+        }
+    </script>
 </body>
 </html>
