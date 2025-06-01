@@ -1,4 +1,4 @@
-# Finding Founders - Structure Documentation
+# Founder Searching - Structure Documentation
 
 ## File Structure
 ```
