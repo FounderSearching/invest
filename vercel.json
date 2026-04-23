@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "animation.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "assets/**/*",
       "use": "@vercel/static"
     }
@@ -14,6 +18,10 @@
     {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
+    },
+    {
+      "src": "/animation.html",
+      "dest": "/animation.html"
     },
     {
       "src": "/(.*)",
