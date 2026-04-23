@@ -47,57 +47,43 @@
     <g clip-path="url(#glassClip)">
 
       <!-- ── CHAR 1 — dark navy — centered at start, exits left ── -->
+      <!-- Small head (r=22) + large near-circular body (r=90) matching logo proportions.
+           Body top (y=125) overlaps head bottom (y=125) so they fuse into one silhouette. -->
       <g id="char1">
-        <circle cx="182" cy="108" r="32"  fill="#1B3A5C"/>
-        <!-- body top (y=115) deliberately overlaps head bottom (y=140)
-             so both shapes fuse into one continuous silhouette -->
-        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#1B3A5C"/>
+        <circle cx="182" cy="103" r="22" fill="#1B3A5C"/>
+        <circle cx="182" cy="215" r="90" fill="#1B3A5C"/>
       </g>
 
       <!-- ── CHAR 2 — dark navy — starts off-right, swipe in / out ── -->
       <g id="char2">
-        <circle cx="182" cy="108" r="32"  fill="#1B3A5C"/>
-        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#1B3A5C"/>
+        <circle cx="182" cy="103" r="22" fill="#1B3A5C"/>
+        <circle cx="182" cy="215" r="90" fill="#1B3A5C"/>
       </g>
 
       <!-- ── CHAR 3 — teal — starts off-right, slides in with bounce ── -->
       <g id="char3">
-        <circle cx="182" cy="108" r="32"  fill="#3AAEAE"/>
-        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#3AAEAE"/>
-
-        <!--
-          Checkmark on the chest area.
-          Animated by collapsing stroke-dashoffset from full length → 0,
-          which "draws" the stroke from start to end.
-        -->
+        <circle cx="182" cy="103" r="22" fill="#3AAEAE"/>
+        <circle cx="182" cy="215" r="90" fill="#3AAEAE"/>
         <path id="checkmark"
-          d="M 158,158 L 174,176 L 214,140"
+          d="M 155,148 L 171,167 L 210,130"
           stroke="white" stroke-width="6.5"
           stroke-linecap="round" stroke-linejoin="round"
           fill="none"
-          stroke-dasharray="84" stroke-dashoffset="84"
+          stroke-dasharray="82" stroke-dashoffset="82"
         />
       </g>
 
       <!-- ── HANDSHAKE SCENE — fades in at the end ─────────────────── -->
+      <!-- Two figures side-by-side with round bodies that just meet in the center. -->
       <g id="handshake" opacity="0">
-
         <!-- Left person: dark navy -->
-        <circle cx="112" cy="122" r="24"  fill="#1B3A5C"/>
-        <ellipse cx="112" cy="208" rx="66" ry="72" fill="#1B3A5C"/>
-        <!-- arm extending right toward center -->
-        <line x1="147" y1="162" x2="190" y2="190"
-              stroke="#1B3A5C" stroke-width="22" stroke-linecap="round"/>
-
+        <circle cx="118" cy="103" r="20" fill="#1B3A5C"/>
+        <circle cx="118" cy="200" r="70" fill="#1B3A5C"/>
         <!-- Right person: teal -->
-        <circle cx="253" cy="122" r="24"  fill="#3AAEAE"/>
-        <ellipse cx="253" cy="208" rx="66" ry="72" fill="#3AAEAE"/>
-        <!-- arm extending left toward center -->
-        <line x1="218" y1="162" x2="175" y2="190"
-              stroke="#3AAEAE" stroke-width="22" stroke-linecap="round"/>
-
-        <!-- Clasped hands — blended color where arms meet -->
-        <ellipse cx="183" cy="190" rx="20" ry="16" fill="#267B8A"/>
+        <circle cx="247" cy="103" r="20" fill="#3AAEAE"/>
+        <circle cx="247" cy="200" r="70" fill="#3AAEAE"/>
+        <!-- Clasped hands — small rounded oval where the two bodies meet -->
+        <ellipse cx="182" cy="193" rx="17" ry="13" fill="#267B8A"/>
       </g>
 
     </g>
