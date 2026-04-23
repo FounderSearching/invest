@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindingFounder — Logo Animation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #ffffff;
+    }
+    #logo-svg {
+      width: min(420px, 88vw);
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <svg id="logo-svg" viewBox="0 0 400 490" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!--
+        Clip everything to the interior of the magnifying glass circle.
+        Characters outside this circle are invisible — they only appear
+        once they "slide in" through the glass boundary.
+      -->
+      <clipPath id="glassClip">
+        <circle cx="182" cy="168" r="126"/>
+      </clipPath>
+    </defs>
+
+    <!-- White background for the glass interior -->
+    <circle cx="182" cy="168" r="126" fill="#ffffff"/>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLIPPED CHARACTER LAYER
+         All three candidate characters + the handshake finale
+         live here, clipped to the glass circle.
+    ═══════════════════════════════════════════════════════════ -->
+    <g clip-path="url(#glassClip)">
+
+      <!-- ── CHAR 1 — dark navy — centered at start, exits left ── -->
+      <g id="char1">
+        <circle cx="182" cy="108" r="32"  fill="#1B3A5C"/>
+        <!-- body top (y=115) deliberately overlaps head bottom (y=140)
+             so both shapes fuse into one continuous silhouette -->
+        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#1B3A5C"/>
+      </g>
+
+      <!-- ── CHAR 2 — dark navy — starts off-right, swipe in / out ── -->
+      <g id="char2">
+        <circle cx="182" cy="108" r="32"  fill="#1B3A5C"/>
+        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#1B3A5C"/>
+      </g>
+
+      <!-- ── CHAR 3 — teal — starts off-right, slides in with bounce ── -->
+      <g id="char3">
+        <circle cx="182" cy="108" r="32"  fill="#3AAEAE"/>
+        <ellipse cx="182" cy="210" rx="100" ry="95" fill="#3AAEAE"/>
+
+        <!--
+          Checkmark on the chest area.
+          Animated by collapsing stroke-dashoffset from full length → 0,
+          which "draws" the stroke from start to end.
+        -->
+        <path id="checkmark"
+          d="M 158,158 L 174,176 L 214,140"
+          stroke="white" stroke-width="6.5"
+          stroke-linecap="round" stroke-linejoin="round"
+          fill="none"
+          stroke-dasharray="84" stroke-dashoffset="84"
+        />
+      </g>
+
+      <!-- ── HANDSHAKE SCENE — fades in at the end ─────────────────── -->
+      <g id="handshake" opacity="0">
+
+        <!-- Left person: dark navy -->
+        <circle cx="112" cy="122" r="24"  fill="#1B3A5C"/>
+        <ellipse cx="112" cy="208" rx="66" ry="72" fill="#1B3A5C"/>
+        <!-- arm extending right toward center -->
+        <line x1="147" y1="162" x2="190" y2="190"
+              stroke="#1B3A5C" stroke-width="22" stroke-linecap="round"/>
+
+        <!-- Right person: teal -->
+        <circle cx="253" cy="122" r="24"  fill="#3AAEAE"/>
+        <ellipse cx="253" cy="208" rx="66" ry="72" fill="#3AAEAE"/>
+        <!-- arm extending left toward center -->
+        <line x1="218" y1="162" x2="175" y2="190"
+              stroke="#3AAEAE" stroke-width="22" stroke-linecap="round"/>
+
+        <!-- Clasped hands — blended color where arms meet -->
+        <ellipse cx="183" cy="190" rx="20" ry="16" fill="#267B8A"/>
+      </g>
+
+    </g>
+    <!-- ═══════════════════════════════════════════════════════ -->
+
+    <!--
+      Glass ring drawn ON TOP of the clipped content.
+      This hides any character pixels right at the clip boundary,
+      giving clean edges as characters slide in and out.
+    -->
+    <circle cx="182" cy="168" r="126"
+            fill="none" stroke="#1B3A5C" stroke-width="12"/>
+
+    <!-- Handle — 45° diagonal from glass lower-right -->
+    <line x1="273" y1="259" x2="335" y2="321"
+          stroke="#1B3A5C" stroke-width="40" stroke-linecap="round"/>
+
+    <!-- "Finding Founder" logotype -->
+    <text x="200" y="402"
+          text-anchor="middle"
+          font-family="Inter, 'Helvetica Neue', Arial, sans-serif"
+          font-weight="700"
+          font-size="40"
+          letter-spacing="-0.5">
+      <tspan fill="#1B3A5C">Finding</tspan><tspan fill="#3AAEAE"> Founder</tspan>
+    </text>
+
+  </svg>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const SLIDE = 330;   // px — off-screen travel distance for the slide
+
+    // ── Set initial off-screen positions (before first paint) ─────────
+    gsap.set('#char2',     { x: SLIDE });
+    gsap.set('#char3',     { x: SLIDE });
+
+    // ── Master looping timeline ───────────────────────────────────────
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 });
+
+    tl
+      // ── Hold on Char 1 ───────────────────────────────────────────────
+      .to({}, { duration: 1.0 })
+
+      // ── SWAP 1: Char 1 slides out left / Char 2 slides in from right ─
+      // power2.in  → ease-in (accelerates) — feels like it's being pulled off
+      // back.out   → overshoots slightly then settles — gives the "bounce" feel
+      .to('#char1', { x: -SLIDE,  duration: 0.50, ease: 'power2.in'     })
+      .to('#char2', { x: 0,       duration: 0.55, ease: 'back.out(1.6)' }, '-=0.46')
+
+      // Hold on Char 2
+      .to({}, { duration: 0.90 })
+
+      // ── SWAP 2: Char 2 slides out left / Char 3 slides in from right ─
+      .to('#char2', { x: -SLIDE,  duration: 0.50, ease: 'power2.in'     })
+      .to('#char3', { x: 0,       duration: 0.58, ease: 'back.out(1.8)' }, '-=0.46')
+
+      // Brief settle after landing
+      .to({}, { duration: 0.38 })
+
+      // ── ZOOM BOUNCE — signals "this is the one!" ─────────────────────
+      // Manual spring: overshoot → pull back → small rebound → rest
+      .to('#char3', { scale: 1.18, transformOrigin: '50% 50%', duration: 0.18, ease: 'power2.out' })
+      .to('#char3', { scale: 0.94, transformOrigin: '50% 50%', duration: 0.14, ease: 'power2.in'  })
+      .to('#char3', { scale: 1.07, transformOrigin: '50% 50%', duration: 0.12, ease: 'power2.out' })
+      .to('#char3', { scale: 1.00, transformOrigin: '50% 50%', duration: 0.10, ease: 'power2.in'  })
+
+      // ── CHECKMARK animates onto the chest ────────────────────────────
+      // stroke-dashoffset collapses from full path length → 0, "drawing" the stroke
+      .to('#checkmark', { strokeDashoffset: 0, duration: 0.46, ease: 'power2.inOut' })
+
+      // Hold with checkmark visible
+      .to({}, { duration: 1.3 })
+
+      // ── TRANSITION: Char 3 fades out → Handshake fades in ────────────
+      .to('#char3',    { opacity: 0, duration: 0.50, ease: 'power2.inOut' })
+      .to('#handshake',{ opacity: 1, duration: 0.72, ease: 'power2.inOut' }, '-=0.22')
+
+      // Hold on handshake finale
+      .to({}, { duration: 2.5 })
+
+      // ── INSTANT RESET — snaps everything back for the next loop ──────
+      // The repeatDelay (2 s) means viewers briefly see Char 1 again
+      // before the animation restarts.
+      .call(() => {
+        gsap.set('#char1',     { x: 0,      opacity: 1          });
+        gsap.set('#char2',     { x: SLIDE,   opacity: 1          });
+        gsap.set('#char3',     { x: SLIDE,   opacity: 1, scale: 1 });
+        gsap.set('#checkmark', { strokeDashoffset: 84             });
+        gsap.set('#handshake', { opacity: 0                       });
+      });
+
+  }());
+  </script>
+
+</body>
+</html>
